@@ -1,0 +1,67 @@
+ESP32 BLUETOOTH SPEAKER WITH TAS5805M
+=====================================
+
+ESP32 DevKit Pinout untuk Bluetooth A2DP + TAS5805M
+====================================================
+
+┌─────────────────────────────────────────────────────────────┐
+│                     ESP32 DevKit                            │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  GND  D35  D34  D39  D36  D3  D1  D2  D4  D5  D17   │   │
+│  │   ├────┬────┬────┬────┬───┬───┬───┬───┬───┬───┬───┤   │
+│  │   │    │    │    │    │   │   │   │   │   │   │   │   │
+│  │   ├────┴────┴────┴────┴───┴───┴───┴───┴───┴───┴───┤   │
+│  │   │                                                 │   │
+│  │   ├────┬────┬────┬────┬───┬───┬───┬───┬───┬───┬───┤   │
+│  │   │ 5V │D16 │D17 │D5  │D18│D19│D21│D22│D23│D25│D26│   │ ← I2C & I2S Pins
+│  │   └────┴────┴────┴────┴───┴───┴───┴───┴───┴───┴───┘   │
+│  │                                                         │
+│  │  ┌─────────────────────────────────────────────────┐   │
+│  │  │   D33  D32  D35  D34  D39  D36  D4  D2  GND  3V3  │  │
+│  │  └─────────────────────────────────────────────────┘   │
+│  └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+
+I2C INTERFACE (TAS5805M Control)
+=================================
+ESP32 Pin 21 (GPIO21) ──SDA──→ TAS5805M SDA
+ESP32 Pin 22 (GPIO22) ──SCL──→ TAS5805M SCL
+ESP32 GND ──────────────────→ TAS5805M GND
+
+I2S INTERFACE (Audio Output to TAS5805M)
+==========================================
+ESP32 Pin 25 (GPIO25) ──WS──→ TAS5805M WS   (LRCLK / Frame Sync)
+ESP32 Pin 26 (GPIO26) ──SCK──→ TAS5805M SCK (BCLK / Bit Clock)
+ESP32 Pin 14 (GPIO14) ──DIN──→ TAS5805M DIN (Serial Data In)
+ESP32 GND ──────────────────→ TAS5805M GND
+
+POWER SUPPLY
+=============
+15V+ External ──→ TAS5805M VCC (untuk performa optimal)
+5V USB ──→ ESP32 VCC
+GND ──→ Common Ground (ESP32, TAS5805M, Speaker)
+
+SPEAKER OUTPUT
+===============
+TAS5805M OUT_L ──→ Speaker Left Channel
+TAS5805M OUT_R ──→ Speaker Right Channel
+(atau mono: gunakan salah satu channel saja)
+
+ALTERNATIVE PIN CONFIGURATION
+==============================
+Jika ingin ganti pin, ubah di platformio.ini:
+
+# I2C
+-D PIN_I2C_SDA=21  → bisa ganti dengan pin lain (misal 4, 13, etc)
+-D PIN_I2C_SCL=22  → bisa ganti dengan pin lain (misal 0, 15, etc)
+
+# I2S
+-D PIN_I2S_FS=25   → bisa ganti dengan pin I2S yang tersedia
+-D PIN_I2S_SCK=26  → bisa ganti dengan pin I2S yang tersedia
+-D PIN_I2S_SD=14   → bisa ganti dengan pin I2S yang tersedia
+
+CATATAN:
+- Pastikan I2S pins tidak bertabrakan dengan I2C pins
+- Gunakan pin yang tidak digunakan untuk USB/Serial
+- External power 15V+ sangat direkomendasikan untuk gain maksimal
+- Jika hanya USB power, gunakan TAS5805M_MIN_GAIN untuk menghindari clipping
